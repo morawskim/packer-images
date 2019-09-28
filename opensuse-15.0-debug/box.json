@@ -1,0 +1,53 @@
+{
+  "variables": {
+    "docker_registry": "https://index.docker.io",
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "opensuse/leap:15.0",
+      "commit": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/opensuse-leap-debug",
+        "tag": "15.0.{{ isotime \"2006-01-02\" }}"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_server": "{{user `docker_registry`}}",
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ],
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/opensuse-leap-debug",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_server": "{{user `docker_registry`}}",
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}
