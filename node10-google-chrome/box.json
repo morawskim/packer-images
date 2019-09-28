@@ -1,0 +1,44 @@
+{
+  "variables": {
+    "docker_registry": "https://index.docker.io",
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "debian:stretch-slim",
+      "commit": true,
+      "changes": [
+        "ENV DEBIAN_FRONTEND noninteractive",
+        "ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE 1",
+        "ENTRYPOINT ''",
+        "CMD bash",
+        "USER chrome"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "docker-tag",
+      "repository": "morawskim/node10-google-chrome",
+      "tag": "latest"
+    },
+    {
+      "type": "docker-push",
+      "login": true,
+      "login_server": "{{user `docker_registry`}}",
+      "login_username": "{{user `docker_username`}}",
+      "login_password": "{{user `docker_password`}}"
+    }
+  ]
+}
