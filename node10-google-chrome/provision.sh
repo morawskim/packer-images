@@ -3,6 +3,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+echo '===> UPDATE distribution and install core packages'
 apt-get update && \
     apt-get -y install \
             software-properties-common \
@@ -12,12 +13,14 @@ apt-get update && \
             apt-transport-https lsb-release gnupg \
         --no-install-recommends
 
+echo '===> Install node10'
 sh -c 'curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -' && \
     sh -c "echo 'deb https://deb.nodesource.com/node_10.x stretch main' > /etc/apt/sources.list.d/nodesource.list" && \
     sh -c "echo 'deb-src https://deb.nodesource.com/node_10.x stretch main' >> /etc/apt/sources.list.d/nodesource.list" && \
     apt-get update && \
     apt-get -y install nodejs
 
+echo '===> Install google-chrome'
 # FROM https://github.com/CircleCI-Public/circleci-dockerfiles/blob/master/node/images/8.9.4/browsers/Dockerfile
 curl --silent --show-error --location --fail --retry 3 --output /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
       && (dpkg -i /tmp/google-chrome-stable_current_amd64.deb || apt-get -fy install)  \
@@ -26,6 +29,7 @@ curl --silent --show-error --location --fail --retry 3 --output /tmp/google-chro
            "/opt/google/chrome/google-chrome" \
       && google-chrome --version
 
+echo '===> Install chromedriver'
 export CHROMEDRIVER_RELEASE=$(curl --location --fail --retry 3 http://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
       && curl --silent --show-error --location --fail --retry 3 --output /tmp/chromedriver_linux64.zip "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_RELEASE/chromedriver_linux64.zip" \
       && cd /tmp \
@@ -35,6 +39,7 @@ export CHROMEDRIVER_RELEASE=$(curl --location --fail --retry 3 http://chromedriv
       && chmod +x /usr/local/bin/chromedriver \
 && chromedriver --version
 
+echo '===> Clean and add user'
 apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

@@ -1,7 +1,8 @@
 {
   "variables": {
     "docker_username": "morawskim",
-    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null
   },
   "sensitive-variables": [
     "docker_password"
@@ -9,21 +10,8 @@
   "builders": [
     {
       "type": "docker",
-      "image": "debian:stretch-slim",
-      "commit": true,
-      "changes": [
-        "ENV DEBIAN_FRONTEND noninteractive",
-        "ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE 1",
-        "ENTRYPOINT [\"/bin/sh\", \"-c\"]",
-        "CMD [\"bash\"]",
-        "USER chrome"
-      ]
-    }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "script": "provision.sh"
+      "image": "morawskim/node10-google-chrome",
+      "commit": true
     }
   ],
   "post-processors": [
@@ -31,7 +19,7 @@
       {
         "type": "docker-tag",
         "repository": "morawskim/node10-google-chrome",
-        "tag": "latest"
+        "tag": "{{ user `docker_tag` }}"
       },
       {
         "type": "docker-push",
