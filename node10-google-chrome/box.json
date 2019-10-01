@@ -14,13 +14,18 @@
       "changes": [
         "ENV DEBIAN_FRONTEND noninteractive",
         "ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE 1",
-        "ENTRYPOINT [\"/bin/sh\", \"-c\"]",
+        "ENTRYPOINT [\"/usr/local/bin/docker-entrypoint.sh\"]",
         "CMD [\"bash\"]",
         "USER chrome"
       ]
     }
   ],
   "provisioners": [
+    {
+      "type": "file",
+      "source": "docker-entrypoint.sh",
+      "destination": "/usr/local/bin/docker-entrypoint.sh"
+    },
     {
       "type": "shell",
       "script": "provision.sh"

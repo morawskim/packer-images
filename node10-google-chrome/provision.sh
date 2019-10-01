@@ -44,3 +44,5 @@ apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 useradd --create-home --user-group chrome
+
+chmod 755 /usr/local/bin/docker-entrypoint.sh
