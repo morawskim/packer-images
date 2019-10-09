@@ -1,6 +1,21 @@
 stages:
   - build
 
+build:vagrant:ubunt-18.04-lts:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd vb-ubuntu-18.04-lts
+    - VBOX_VERSION=$(VBoxHeadless --version | head -n 1 | awk '{print $NF}' | cut -f1 -d'_')
+    - echo $VBOX_VERSION
+    - packer build --var disk_size=102400 --var virtualbox_version=$VBOX_VERSION --var headless=true box.json
+    #TODO: copy to nexus
+    - cp Ubuntu-18.04-amd64-minimal-v1.0.0-virtualbox.box /tmp
+  tags:
+    - packer
+
 build:docker:node10-google-chrome:
   stage: build
   when: manual
