@@ -1,0 +1,57 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "debian:stretch-slim",
+      "commit": true,
+      "changes": [
+        "ENV DEBIAN_FRONTEND noninteractive",
+        "WORKDIR /usr/local/collectd-web/",
+        "EXPOSE 8080",
+        "ENTRYPOINT [\"python\", \"runserver.py\", \"0.0.0.0\", \"8080\"]",
+        "USER nobody"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/collectd-web",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ],
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/collectd-web",
+        "tag": "master.{{ isotime \"2006-01-02\" }}"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}

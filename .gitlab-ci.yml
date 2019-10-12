@@ -31,3 +31,15 @@ build:docker:node10-google-chrome:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box-tag.json
   tags:
     - packer
+
+build:docker:collectd-web:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd collectd-web
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+
