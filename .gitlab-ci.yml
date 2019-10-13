@@ -43,3 +43,21 @@ build:docker:collectd-web:
   tags:
     - packer
 
+build:docker:htrace.sh:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - cd htrace.sh
+    - git clone --branch v$VERSION -- https://github.com/trimstray/htrace.sh.git
+    - cd htrace.sh
+    - docker build --no-cache -t $NAME -f build/Dockerfile .
+    - cd ..
+    - rm -rf ./htrace.sh
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$VERSION box.json
+  variables:
+    VERSION: 1.1.6
+    NAME: htrace.sh
+  tags:
+    - packer
+
