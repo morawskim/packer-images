@@ -83,3 +83,14 @@ build:docker:php54v:
   tags:
     - packer
 
+build:docker:php55v:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd php55v
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+
