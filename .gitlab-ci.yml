@@ -61,3 +61,14 @@ build:docker:htrace.sh:
   tags:
     - packer
 
+build:docker:php53v:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd php53v
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+
