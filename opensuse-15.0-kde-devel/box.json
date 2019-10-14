@@ -31,7 +31,6 @@
       {
         "type": "docker-push",
         "login": true,
-        "login_server": "{{user `docker_registry`}}",
         "login_username": "{{user `docker_username`}}",
         "login_password": "{{user `docker_password`}}"
       }
@@ -45,7 +44,6 @@
       {
         "type": "docker-push",
         "login": true,
-        "login_server": "{{user `docker_registry`}}",
         "login_username": "{{user `docker_username`}}",
         "login_password": "{{user `docker_password`}}"
       }
