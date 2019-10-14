@@ -116,3 +116,14 @@ build:docker:opensuse-15.0-debug:
   tags:
     - packer
 
+build:docker:opensuse-15.0-kde:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd opensuse-15.0-kde
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+
