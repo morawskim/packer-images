@@ -105,3 +105,14 @@ build:docker:php56v:
   tags:
     - packer
 
+build:docker:opensuse-15.0-debug:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd opensuse-15.0-debug
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+
