@@ -18,7 +18,7 @@ build:vagrant:ubunt-18.04-lts:
 
 build:docker:node10-google-chrome:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -31,10 +31,12 @@ build:docker:node10-google-chrome:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box-tag.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:collectd-web:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -42,10 +44,12 @@ build:docker:collectd-web:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:htrace.sh:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - cd htrace.sh
@@ -60,10 +64,12 @@ build:docker:htrace.sh:
     NAME: htrace.sh
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:php53v:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -71,10 +77,12 @@ build:docker:php53v:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:php54v:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -82,10 +90,12 @@ build:docker:php54v:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:php55v:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -93,10 +103,12 @@ build:docker:php55v:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:php56v:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -104,10 +116,12 @@ build:docker:php56v:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:opensuse-15.0-debug:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -115,10 +129,12 @@ build:docker:opensuse-15.0-debug:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:opensuse-15.0-kde:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -126,10 +142,12 @@ build:docker:opensuse-15.0-kde:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - schedules
 
 build:docker:opensuse-15.0-kde-devel:
   stage: build
-  when: manual
+  when: always
   allow_failure: false
   script:
     - packer version
@@ -137,3 +155,5 @@ build:docker:opensuse-15.0-kde-devel:
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
+  only:
+    - triggers
