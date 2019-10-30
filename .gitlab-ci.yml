@@ -140,6 +140,8 @@ build:docker:opensuse-15.0-kde:
     - packer version
     - pushd opensuse-15.0-kde
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+    - >
+      curl --fail -X POST --form token=${TRIGGER_TOKEN} --form ref=$CI_COMMIT_REF_NAME --form "variables[BUILD_KDE_DEV]=1" https://gitlab.sensilabs.pl/api/v4/projects/$CI_PROJECT_ID/trigger/pipeline
   tags:
     - packer
   only:
@@ -156,4 +158,7 @@ build:docker:opensuse-15.0-kde-devel:
   tags:
     - packer
   only:
-    - triggers
+    refs:
+      - triggers
+    variables:
+      - $BUILD_KDE_DEV == "1"
