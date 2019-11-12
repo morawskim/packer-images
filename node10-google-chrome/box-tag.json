@@ -11,7 +11,11 @@
     {
       "type": "docker",
       "image": "morawskim/node10-google-chrome",
-      "commit": true
+      "commit": true,
+      "changes": [
+        "ENTRYPOINT [\"/usr/local/bin/docker-entrypoint.sh\"]",
+        "CMD [\"bash\"]"
+      ]
     }
   ],
   "post-processors": [
