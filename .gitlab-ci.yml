@@ -1,10 +1,8 @@
 stages:
   - build
 
-build:vagrant:ubunt-18.04-lts:
+.build:vagrant:ubunt-18.04-lts:
   stage: build
-  when: manual
-  allow_failure: false
   script:
     - packer version
     - pushd vb-ubuntu-18.04-lts
@@ -15,11 +13,14 @@ build:vagrant:ubunt-18.04-lts:
     - cp Ubuntu-18.04-amd64-minimal-v1.0.0-virtualbox.box /tmp
   tags:
     - packer
+  only:
+    changes:
+      - "vb-ubuntu-18.04-lts/*"
+  except:
+    - triggers
 
 build:docker:node10-google-chrome:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd node10-google-chrome
@@ -35,11 +36,11 @@ build:docker:node10-google-chrome:
   only:
     changes:
       - "node10-google-chrome/*"
+  except:
+    - triggers
 
 build:docker:collectd-web:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd collectd-web
@@ -49,11 +50,11 @@ build:docker:collectd-web:
   only:
     changes:
       - "collectd-web/*"
+  except:
+    - triggers
 
 build:docker:htrace.sh:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - cd htrace.sh
     - git clone --branch v$VERSION -- https://github.com/trimstray/htrace.sh.git
@@ -70,11 +71,11 @@ build:docker:htrace.sh:
   only:
     changes:
       - "htrace.sh/*"
+  except:
+    - triggers
 
 build:docker:webgrind:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd webgrind
@@ -87,11 +88,11 @@ build:docker:webgrind:
   only:
     changes:
       - "webgrind/*"
+  except:
+    - triggers
 
 build:docker:php53v:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd php53v
@@ -101,11 +102,11 @@ build:docker:php53v:
   only:
     changes:
       - "php53v/*"
+  except:
+    - triggers
 
 build:docker:php54v:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd php54v
@@ -115,11 +116,11 @@ build:docker:php54v:
   only:
     changes:
       - "php54v/*"
+  except:
+    - triggers
 
 build:docker:php55v:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd php55v
@@ -129,11 +130,11 @@ build:docker:php55v:
   only:
     changes:
       - "php55v/*"
+  except:
+    - triggers
 
 build:docker:php56v:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd php56v
@@ -143,11 +144,11 @@ build:docker:php56v:
   only:
     changes:
       - "php56v/*"
+  except:
+    - triggers
 
 build:docker:opensuse-15.0-debug:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd opensuse-15.0-debug
@@ -157,11 +158,11 @@ build:docker:opensuse-15.0-debug:
   only:
     changes:
       - "opensuse-15.0-debug/*"
+  except:
+    - triggers
 
 build:docker:opensuse-15.0-kde:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd opensuse-15.0-kde
@@ -173,11 +174,11 @@ build:docker:opensuse-15.0-kde:
   only:
     changes:
       - "opensuse-15.0-kde/*"
+  except:
+    - triggers
 
 build:docker:opensuse-15.0-kde-devel:
   stage: build
-  when: always
-  allow_failure: false
   script:
     - packer version
     - pushd opensuse-15.0-kde-devel
