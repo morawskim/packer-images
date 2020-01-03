@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "php:7.4-cli-alpine",
+      "commit": true,
+      "changes": [
+        "ENV DEBIAN_FRONTEND noninteractive",
+        "WORKDIR /usr/local/webgrind/",
+        "EXPOSE 8080",
+        "ENTRYPOINT [\"php\", \"-S\", \"0.0.0.0:8080\", \"index.php\"]",
+        "USER nobody"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh",
+      "environment_vars": ["VERSION={{ user `docker_tag` }}"]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/webgrind",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "keep_input_artifact": false,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ],
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/webgrind",
+        "tag": "{{ user `docker_tag` }}"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "keep_input_artifact": false,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}
