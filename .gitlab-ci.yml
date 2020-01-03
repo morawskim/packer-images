@@ -33,7 +33,8 @@ build:docker:node10-google-chrome:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "node10-google-chrome/*"
 
 build:docker:collectd-web:
   stage: build
@@ -46,7 +47,8 @@ build:docker:collectd-web:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "collectd-web/*"
 
 build:docker:htrace.sh:
   stage: build
@@ -66,7 +68,8 @@ build:docker:htrace.sh:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "htrace.sh/*"
 
 build:docker:webgrind:
   stage: build
@@ -82,7 +85,8 @@ build:docker:webgrind:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "webgrind/*"
 
 build:docker:php53v:
   stage: build
@@ -95,7 +99,8 @@ build:docker:php53v:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "php53v/*"
 
 build:docker:php54v:
   stage: build
@@ -108,7 +113,8 @@ build:docker:php54v:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "php54v/*"
 
 build:docker:php55v:
   stage: build
@@ -121,7 +127,8 @@ build:docker:php55v:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "php55v/*"
 
 build:docker:php56v:
   stage: build
@@ -134,7 +141,8 @@ build:docker:php56v:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "php56v/*"
 
 build:docker:opensuse-15.0-debug:
   stage: build
@@ -147,7 +155,8 @@ build:docker:opensuse-15.0-debug:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "opensuse-15.0-debug/*"
 
 build:docker:opensuse-15.0-kde:
   stage: build
@@ -162,7 +171,8 @@ build:docker:opensuse-15.0-kde:
   tags:
     - packer
   only:
-    - schedules
+    changes:
+      - "opensuse-15.0-kde/*"
 
 build:docker:opensuse-15.0-kde-devel:
   stage: build
