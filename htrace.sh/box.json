@@ -24,6 +24,7 @@
       },
       {
         "type": "docker-push",
+        "keep_input_artifact": false,
         "login": true,
         "login_username": "{{user `docker_username`}}",
         "login_password": "{{user `docker_password`}}"
@@ -37,6 +38,7 @@
       },
       {
         "type": "docker-push",
+        "keep_input_artifact": false,
         "login": true,
         "login_username": "{{user `docker_username`}}",
         "login_password": "{{user `docker_password`}}"

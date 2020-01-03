@@ -29,6 +29,7 @@ build:docker:node10-google-chrome:
     - TAG=$(echo $GOOGLE_CHROME_VERSION | awk '{print $NF}' | cut -d'.' -f 1-2)
     - echo 'TAG - ' $TAG
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box-tag.json
+    - docker image rm morawskim/node10-google-chrome morawskim/node10-google-chrome:$TAG
   tags:
     - packer
   only:
@@ -171,6 +172,7 @@ build:docker:opensuse-15.0-kde-devel:
     - packer version
     - pushd opensuse-15.0-kde-devel
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+    - docker image rm morawskim/opensuse-15.0-kde
   tags:
     - packer
   only:
