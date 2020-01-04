@@ -26,7 +26,7 @@
       {
         "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-kde5-devel",
-        "tag": "15.0.{{ isotime \"2006-01-02\" }}"
+        "tag": "latest"
       },
       {
         "type": "docker-push",
@@ -39,7 +39,7 @@
       {
         "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-kde5-devel",
-        "tag": "latest"
+        "tag": "15.0.{{ isotime \"2006-01-02\" }}"
       },
       {
         "type": "docker-push",

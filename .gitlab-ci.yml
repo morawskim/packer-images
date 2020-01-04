@@ -1,5 +1,6 @@
 stages:
   - build
+  - clean
 
 .build:vagrant:ubunt-18.04-lts:
   stage: build
@@ -183,7 +184,6 @@ build:docker:opensuse-15.0-kde-devel:
     - packer version
     - pushd opensuse-15.0-kde-devel
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-    - docker image rm morawskim/opensuse-15.0-kde
   tags:
     - packer
   only:
@@ -191,3 +191,11 @@ build:docker:opensuse-15.0-kde-devel:
       - triggers
     variables:
       - $BUILD_KDE_DEV == "1"
+
+clean:
+  stage: clean
+  when: always
+  script:
+    - docker image prune
+  tags:
+    - packer
