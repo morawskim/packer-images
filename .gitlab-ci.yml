@@ -57,6 +57,7 @@ build:docker:htrace.sh:
   stage: build
   script:
     - cd htrace.sh
+    - VERSION=$(curl -sL https://api.github.com/repos/trimstray/htrace.sh/git/matching-refs/tags | jq '.[].ref' | cut -c13- | rev | cut -c2- | rev | sed -n '/^[[:digit:]]\.[[:digit:]]\.[[:digit:]]$/p' | sort -r --version-sort | head -1)
     - git clone --branch v$VERSION -- https://github.com/trimstray/htrace.sh.git
     - cd htrace.sh
     - docker build --no-cache -t $NAME -f build/Dockerfile .
@@ -64,7 +65,6 @@ build:docker:htrace.sh:
     - rm -rf ./htrace.sh
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$VERSION box.json
   variables:
-    VERSION: 1.1.6
     NAME: htrace.sh
   tags:
     - packer
