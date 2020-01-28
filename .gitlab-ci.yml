@@ -196,6 +196,6 @@ clean:
   stage: clean
   when: always
   script:
-    - docker image prune
+    - docker image prune --force
   tags:
     - packer
