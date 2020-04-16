@@ -93,7 +93,6 @@
     {
       "type": "shell",
       "scripts": [
-        "./provisioners/install-puppet.sh",
         "./provisioners/cleanup.sh"
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'"
