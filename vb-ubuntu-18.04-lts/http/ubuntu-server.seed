@@ -18,6 +18,7 @@ d-i console-setup/layoutcode string pl
 
 
 ### Network configuration
+d-i debian-installer/add-kernel-opts string net.ifnames=0
 d-i netcfg/choose_interface select auto
 # To pick a particular interface instead:
 #d-i netcfg/choose_interface select eth1
@@ -108,6 +109,3 @@ d-i grub-installer/only_debian boolean true
 # This one makes grub-installer install to the MBR if it also finds some other
 # OS, which is less safe as it might not be able to boot that other OS.
 d-i grub-installer/with_other_os boolean true
-
-d-i grub-installer/bootdev  string /dev/sda
-

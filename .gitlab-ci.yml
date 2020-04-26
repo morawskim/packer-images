@@ -9,9 +9,7 @@ stages:
     - pushd vb-ubuntu-18.04-lts
     - VBOX_VERSION=$(VBoxHeadless --version | head -n 1 | awk '{print $NF}' | cut -f1 -d'_')
     - echo $VBOX_VERSION
-    - packer build --var disk_size=102400 --var virtualbox_version=$VBOX_VERSION --var headless=true box.json
-    #TODO: copy to nexus
-    - cp Ubuntu-18.04-amd64-minimal-v1.0.0-virtualbox.box /tmp
+    - packer build -parallel-builds=1 --var disk_size=102400 --var virtualbox_version=$VBOX_VERSION --var headless=true box.json
   tags:
     - packer
   only:
