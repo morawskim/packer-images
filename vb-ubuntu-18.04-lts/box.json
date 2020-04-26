@@ -17,8 +17,12 @@
     "linux": "/install/linux",
     "initrd": "/install/initrd.gz",
     "headless": "false",
-    "archive_mirror": "http://archive.ubuntu.com/ubuntu"
+    "archive_mirror": "http://archive.ubuntu.com/ubuntu",
+    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
   },
+  "sensitive-variables": [
+    "vagrant_cloud_token"
+  ],
   "builders": [
     {
       "type": "virtualbox-iso",
@@ -99,11 +103,20 @@
     }
   ],
   "post-processors": [
-    {
-      "type": "vagrant",
-      "only": ["virtualbox-iso"],
-      "compression_level": 6,
-      "output": "./{{user `vm_name`}}-v{{user `box_version`}}-{{ .Provider }}.box"
-    }
+    [
+      {
+        "type": "vagrant",
+        "only": ["virtualbox-iso"],
+        "compression_level": 6,
+        "output": "./{{user `vm_name`}}-v{{user `box_version`}}-{{ .Provider }}.box"
+      },
+      {
+        "type": "vagrant-cloud",
+        "no_release": true,
+        "box_tag": "morawskim/{{user `vm_name`}}",
+        "access_token": "{{user `vagrant_cloud_token`}}",
+        "version": "{{user `box_version`}}.{{ isotime \"2006-01-02\" }}"
+      }
+    ]
   ]
 }
