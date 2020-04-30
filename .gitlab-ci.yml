@@ -18,6 +18,22 @@ stages:
   except:
     - triggers
 
+build:vagrant:nominatim-monaco:
+  stage: build
+  variables:
+    PACKER_LOG: 1
+  script:
+    - packer version
+    - pushd vagrant-nominatim-monaco
+    - packer build box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "vagrant-nominatim-monaco/*"
+  except:
+    - triggers
+
 build:docker:node10-google-chrome:
   stage: build
   script:

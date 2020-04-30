@@ -1,0 +1,79 @@
+{
+  "variables": {
+    "box_name": "nominatim-monaco",
+    "box_version": "0.1.0",
+    "osm_file_path": "/tmp/monaco-latest.osm.pbf",
+    "skip_add": "false",
+    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "vagrant_cloud_token"
+  ],
+  "builders": [
+    {
+      "type": "vagrant",
+      "communicator": "ssh",
+      "provider": "virtualbox",
+      "source_path": "morawskim/Ubuntu-18.04-amd64-minimal",
+      "skip_add": "{{user `skip_add`}}",
+      "add_force": true,
+      "template": "Vagrantfile-template",
+      "synced_folder": "../"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update -qq",
+        "apt-get install -y puppet",
+        "puppet apply /vagrant/provision/manifest.pp",
+        "apt-get clean",
+        "rm -rf /var/lib/{apt,dpkg,cache,log}/"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "wget -O{{user `osm_file_path`}} https://download.geofabrik.de/europe/monaco-latest.osm.pbf"
+      ]
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "provision/script.sh"
+      ],
+      "environment_vars": [
+        "OSM_FILE_PATH={{user `osm_file_path`}}"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "rm -v {{user `osm_file_path`}}"
+      ]
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "provision/cleanup.sh"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash -ex '{{.Path}}'"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "vagrant-cloud",
+        "no_release": true,
+        "box_tag": "morawskim/{{user `box_name`}}",
+        "access_token": "{{user `vagrant_cloud_token`}}",
+        "version": "{{user `box_version`}}.{{ isotime \"2006-01-02\" }}"
+      }
+    ]
+  ]
+}
