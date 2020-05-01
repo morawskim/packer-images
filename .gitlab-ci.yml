@@ -18,21 +18,34 @@ stages:
   except:
     - triggers
 
-build:vagrant:nominatim-monaco:
+.build:vagrant:nominatim:
   stage: build
+  when: manual
+  #resource_group: packer
   variables:
     PACKER_LOG: 1
+    REGION: "TO_OVERWRITE_IN_CHILD_JOB"
+    REGION_DATA_URL: "TO_OVERWRITE_IN_CHILD_JOB"
   script:
     - packer version
-    - pushd vagrant-nominatim-monaco
-    - packer build box.json
+    - pushd vagrant-nominatim
+    - echo "REGION ${REGION}"
+    - echo "REGION_DATA_URL ${REGION_DATA_URL}"
+    - packer build -var "region=${REGION}" -var "region_data_url=${REGION_DATA_URL}" box.json
   tags:
     - packer
-  only:
-    changes:
-      - "vagrant-nominatim-monaco/*"
-  except:
-    - triggers
+
+build:vagrant:nominatim-monaco:
+  extends: .build:vagrant:nominatim
+  variables:
+    REGION: monaco
+    REGION_DATA_URL: https://download.geofabrik.de/europe/monaco-latest.osm.pbf
+
+build:vagrant:nominatim-poland:
+  extends: .build:vagrant:nominatim
+  variables:
+    REGION: poland
+    REGION_DATA_URL: https://download.geofabrik.de/europe/poland-latest.osm.pbf
 
 build:docker:node10-google-chrome:
   stage: build
