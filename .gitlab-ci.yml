@@ -23,7 +23,7 @@ stages:
   when: manual
   #resource_group: packer
   variables:
-    PACKER_LOG: 1
+    PACKER_LOG: 0
     REGION: "TO_OVERWRITE_IN_CHILD_JOB"
     REGION_DATA_URL: "TO_OVERWRITE_IN_CHILD_JOB"
   script:
@@ -31,7 +31,7 @@ stages:
     - pushd vagrant-nominatim
     - echo "REGION ${REGION}"
     - echo "REGION_DATA_URL ${REGION_DATA_URL}"
-    - packer build -var "region=${REGION}" -var "region_data_url=${REGION_DATA_URL}" box.json
+    - packer build -var "region=${REGION}" -var "region_data_url=${REGION_DATA_URL}" -var "skip_add=true" box.json
   tags:
     - packer
 
