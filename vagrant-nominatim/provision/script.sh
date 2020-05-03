@@ -20,4 +20,4 @@ tee settings/local.php << EOF
  @define('CONST_Website_BaseURL', '/');
 EOF
 
-./utils/setup.php --osm-file $OSM_FILE --all --osm2pgsql-cache 3072 2>&1 | tee ~/setup.log
+./utils/setup.php --quiet --osm-file $OSM_FILE --all --osm2pgsql-cache 3072 2>&1 | tee ~/setup.log

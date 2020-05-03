@@ -41,7 +41,7 @@
     {
       "type": "shell",
       "inline": [
-        "wget -O{{user `osm_file_path`}} {{user `region_data_url`}}"
+        "wget -O{{user `osm_file_path`}} --no-verbose {{user `region_data_url`}}"
       ]
     },
     {
