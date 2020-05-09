@@ -47,6 +47,12 @@ build:vagrant:nominatim-poland:
     REGION: poland
     REGION_DATA_URL: https://download.geofabrik.de/europe/poland-latest.osm.pbf
 
+build:vagrant:nominatim-britain-and-ireland:
+  extends: .build:vagrant:nominatim
+  variables:
+    REGION: britain-and-ireland
+    REGION_DATA_URL: https://download.geofabrik.de/europe/britain-and-ireland-latest.osm.pbf
+
 build:docker:node10-google-chrome:
   stage: build
   script:
