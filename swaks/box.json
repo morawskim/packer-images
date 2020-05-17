@@ -1,0 +1,58 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "debian:stretch-slim",
+      "commit": true,
+      "changes": [
+        "ENV DEBIAN_FRONTEND noninteractive",
+        "ENTRYPOINT [\"/usr/local/bin/swaks\"]",
+        "USER nobody"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "provision.sh",
+      "environment_vars": ["VERSION={{ user `docker_tag` }}"]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/swaks",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ],
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/swaks",
+        "tag": "{{ user `docker_tag` }}"
+      },
+      {
+        "type": "docker-push",
+        "keep_input_artifact": false,
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}

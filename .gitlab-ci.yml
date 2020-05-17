@@ -145,6 +145,24 @@ build:docker:webgrind:
   except:
     - triggers
 
+build:docker:swaks:
+  stage: build
+  when: manual
+  allow_failure: false
+  script:
+    - packer version
+    - pushd swaks
+    - TAG=20190914.0
+    - echo 'TAG - ' $TAG
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "swaks/*"
+  except:
+    - triggers
+
 build:docker:php53v:
   stage: build
   script:
