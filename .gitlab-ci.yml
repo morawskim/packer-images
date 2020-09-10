@@ -163,6 +163,22 @@ build:docker:swaks:
   except:
     - triggers
 
+build:docker:csvsql-mysql:
+  stage: build
+  script:
+    - packer version
+    - pushd csvsql-mysql
+    - VERSION=$(curl -sL https://api.github.com/repos/wireservice/csvkit/git/matching-refs/tags | jq '.[].ref' | cut -c12- | rev | cut -c2- | rev | sed -n '/^[[:digit:]]\.[[:digit:]]\.[[:digit:]]$/p' | sort -r --version-sort | head -1)
+    - echo 'TAG - ' $VERSION
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$VERSION box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "csvsql-mysql/*"
+  except:
+    - triggers
+
 build:docker:php53v:
   stage: build
   script:
