@@ -170,7 +170,12 @@ build:docker:csvsql-mysql:
     - pushd csvsql-mysql
     - VERSION=$(curl -sL https://api.github.com/repos/wireservice/csvkit/git/matching-refs/tags | jq '.[].ref' | cut -c12- | rev | cut -c2- | rev | sed -n '/^[[:digit:]]\.[[:digit:]]\.[[:digit:]]$/p' | sort -r --version-sort | head -1)
     - echo 'TAG - ' $VERSION
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$VERSION box.json
+    - >
+      if curl --silent -f --head -lL https://hub.docker.com/v2/repositories/morawskim/csvsql-mysql/tags/$VERSION/ > /dev/null; then
+        echo "Image already exists, so skip build and push"
+      else
+        DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$VERSION box.json
+      fi
   tags:
     - packer
   only:
