@@ -1,0 +1,35 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "morawskim/newrelic-fluent-bit-output-build",
+      "commit": true,
+      "pull": false,
+      "run_command": ["-d", "-i", "-t", "--", "{{.Image}}"]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/newrelic-fluent-bit-output",
+        "tag": "{{ user `docker_tag` }}"
+      },
+      {
+        "type": "docker-push",
+        "keep_input_artifact": false,
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}

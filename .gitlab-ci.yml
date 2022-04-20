@@ -284,6 +284,23 @@ build:docker:opensuse-15.0-kde-devel:
     variables:
       - $BUILD_KDE_DEV == "1"
 
+build:docker:newrelic-fluent-bit-output:
+  stage: build
+  script:
+    - pushd newrelic-fluent-bit-output
+    - VERSION=$(curl -sL https://api.github.com/repos/newrelic/newrelic-fluent-bit-output/releases/latest | jq -r '.tag_name')
+    - TAG=$(basename $VERSION | cut -c2-)
+    - echo 'TAG - ' $TAG
+    - make build NEWRELIC_PLUGIN_VERSION=$TAG
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "newrelic-fluent-bit-output/*"
+  except:
+    - triggers
+
 clean:
   stage: clean
   when: always
