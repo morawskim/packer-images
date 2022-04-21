@@ -10,7 +10,7 @@
   "builders": [
     {
       "type": "docker",
-      "image": "opensuse/leap:15.0",
+      "image": "opensuse/leap:15.3",
       "commit": true
     }
   ],
@@ -25,7 +25,7 @@
       {
         "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-debug",
-        "tag": "latest"
+        "tag": "15.3"
       },
       {
         "type": "docker-push",
@@ -38,7 +38,7 @@
       {
         "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-debug",
-        "tag": "15.0.{{ isotime \"2006-01-02\" }}"
+        "tag": "15.3.{{ isotime \"2006-01-02\" }}"
       },
       {
         "type": "docker-push",
