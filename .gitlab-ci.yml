@@ -184,105 +184,19 @@ build:docker:csvsql-mysql:
   except:
     - triggers
 
-build:docker:php53v:
+build:docker:opensuse-15.3-debug:
   stage: build
   script:
     - packer version
-    - pushd php53v
+    - pushd opensuse-15.3-debug
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
   only:
     changes:
-      - "php53v/*"
+      - "opensuse-15.3-debug/*"
   except:
     - triggers
-
-build:docker:php54v:
-  stage: build
-  script:
-    - packer version
-    - pushd php54v
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    changes:
-      - "php54v/*"
-  except:
-    - triggers
-
-build:docker:php55v:
-  stage: build
-  script:
-    - packer version
-    - pushd php55v
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    changes:
-      - "php55v/*"
-  except:
-    - triggers
-
-build:docker:php56v:
-  stage: build
-  script:
-    - packer version
-    - pushd php56v
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    changes:
-      - "php56v/*"
-  except:
-    - triggers
-
-build:docker:opensuse-15.0-debug:
-  stage: build
-  script:
-    - packer version
-    - pushd opensuse-15.0-debug
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    changes:
-      - "opensuse-15.0-debug/*"
-  except:
-    - triggers
-
-build:docker:opensuse-15.0-kde:
-  stage: build
-  script:
-    - packer version
-    - pushd opensuse-15.0-kde
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-    - >
-      curl --fail -X POST --form token=${TRIGGER_TOKEN} --form ref=$CI_COMMIT_REF_NAME --form "variables[BUILD_KDE_DEV]=1" https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/trigger/pipeline
-  tags:
-    - packer
-  only:
-    changes:
-      - "opensuse-15.0-kde/*"
-  except:
-    - triggers
-
-build:docker:opensuse-15.0-kde-devel:
-  stage: build
-  script:
-    - packer version
-    - pushd opensuse-15.0-kde-devel
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    refs:
-      - triggers
-    variables:
-      - $BUILD_KDE_DEV == "1"
 
 build:docker:newrelic-fluent-bit-output:
   stage: build
