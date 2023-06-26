@@ -1,0 +1,53 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "node:alpine",
+      "commit": true,
+      "pull": true,
+      "changes": [
+        "EXPOSE 3000",
+        "WORKDIR /home/node",
+        "ENTRYPOINT [\"/usr/local/bin/npm\", \"start\"]"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "sources": ["jsonplaceholder/package.json", "jsonplaceholder/package-lock.json", "jsonplaceholder/index.js", "jsonplaceholder/data.json", "jsonplaceholder/Procfile", "jsonplaceholder/seed.js"],
+      "destination": "/home/node/"
+    },
+    {
+      "type": "file",
+      "source": "jsonplaceholder/src",
+      "destination": "/home/node/src"
+    },
+    {
+      "type": "shell",
+      "script": "provision.sh"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/jsonplaceholder",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}

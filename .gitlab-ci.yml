@@ -215,6 +215,21 @@ build:docker:newrelic-fluent-bit-output:
   except:
     - triggers
 
+build:docker:jsonplaceholder:
+  stage: build
+  script:
+    - pushd jsonplaceholder
+    - packer version
+    - git clone https://github.com/typicode/jsonplaceholder.git
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "jsonplaceholder/*"
+  except:
+    - triggers
+
 clean:
   stage: clean
   when: always
