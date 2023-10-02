@@ -230,6 +230,21 @@ build:docker:jsonplaceholder:
   except:
     - triggers
 
+build:docker:lorem-space-backend:
+  stage: build
+  script:
+    - pushd lorem-space-backend
+    - packer version
+    - bash ./fetch-images.sh
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "lorem-space-backend/*"
+  except:
+    - triggers
+
 clean:
   stage: clean
   when: always

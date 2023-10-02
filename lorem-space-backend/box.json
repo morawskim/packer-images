@@ -1,0 +1,42 @@
+{
+  "variables": {
+    "docker_username": "morawskim",
+    "docker_password": "{{ env `DOCKER_TOKEN` }}"
+  },
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "ghcr.io/manasky/lorem-server:latest",
+      "commit": true,
+      "changes": [
+        "ENTRYPOINT [\"/app/lorem\"]",
+        "ENV HOST 0.0.0.0:8080"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "destination": "/app/",
+      "source": "./images",
+      "type": "file"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "morawskim/lorem-space-backend",
+        "tag": "latest"
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "{{user `docker_username`}}",
+        "login_password": "{{user `docker_password`}}"
+      }
+    ]
+  ]
+}
