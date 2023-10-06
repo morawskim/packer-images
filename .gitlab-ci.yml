@@ -153,17 +153,17 @@ build:docker:csvsql-mysql:
   except:
     - triggers
 
-build:docker:opensuse-15.3-debug:
+build:docker:opensuse-tumbleweed-debug:
   stage: build
   script:
     - packer version
-    - pushd opensuse-15.3-debug
+    - pushd opensuse-tumbleweed-debug
     - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
   tags:
     - packer
   only:
     changes:
-      - "opensuse-15.3-debug/*"
+      - "opensuse-tumbleweed-debug/*"
   except:
     - triggers
 

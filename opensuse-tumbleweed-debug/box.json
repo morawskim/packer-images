@@ -2,36 +2,20 @@
   "builders": [
     {
       "commit": true,
-      "image": "opensuse/leap:15.3",
+      "image": "opensuse/tumbleweed",
       "type": "docker"
     }
   ],
   "post-processors": [
     [
       {
-        "repository": "morawskim/opensuse-leap-debug",
+        "repository": "morawskim/opensuse-tumbleweed-debug",
         "tags": [
-          "15.3"
+          "latest"
         ],
         "type": "docker-tag"
       },
       {
-        "login": true,
-        "login_password": "{{user `docker_password`}}",
-        "login_username": "{{user `docker_username`}}",
-        "type": "docker-push"
-      }
-    ],
-    [
-      {
-        "repository": "morawskim/opensuse-leap-debug",
-        "tags": [
-          "15.3.{{ isotime \"2006-01-02\" }}"
-        ],
-        "type": "docker-tag"
-      },
-      {
-        "keep_input_artifact": false,
         "login": true,
         "login_password": "{{user `docker_password`}}",
         "login_username": "{{user `docker_username`}}",
