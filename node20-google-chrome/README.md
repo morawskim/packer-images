@@ -4,4 +4,4 @@
 
 ## Run
 
-Run docker image `docker run -it morawskim/node12-google-chrome`
+Run docker image `docker run -it morawskim/node20-google-chrome`

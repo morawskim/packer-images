@@ -3,20 +3,19 @@
     {
       "changes": [
         "ENTRYPOINT [\"/usr/local/bin/docker-entrypoint.sh\"]",
-        "CMD [\"bash\"]",
-        "USER node"
+        "CMD [\"bash\"]"
       ],
       "commit": true,
-      "image": "node:12.16-slim",
+      "image": "morawskim/node20-google-chrome",
       "type": "docker"
     }
   ],
   "post-processors": [
     [
       {
-        "repository": "morawskim/node12-google-chrome",
+        "repository": "morawskim/node20-google-chrome",
         "tags": [
-          "latest"
+          "{{ user `docker_tag` }}"
         ],
         "type": "docker-tag"
       },
@@ -28,22 +27,12 @@
       }
     ]
   ],
-  "provisioners": [
-    {
-      "destination": "/usr/local/bin/docker-entrypoint.sh",
-      "source": "docker-entrypoint.sh",
-      "type": "file"
-    },
-    {
-      "script": "provision.sh",
-      "type": "shell"
-    }
-  ],
   "sensitive-variables": [
     "docker_password"
   ],
   "variables": {
     "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null,
     "docker_username": "morawskim"
   }
 }
