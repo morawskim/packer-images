@@ -73,20 +73,6 @@ build:docker:node20-google-chrome:
   except:
     - triggers
 
-build:docker:collectd-web:
-  stage: build
-  script:
-    - packer version
-    - pushd collectd-web
-    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
-  tags:
-    - packer
-  only:
-    changes:
-      - "collectd-web/*"
-  except:
-    - triggers
-
 build:docker:htrace.sh:
   stage: build
   script:
