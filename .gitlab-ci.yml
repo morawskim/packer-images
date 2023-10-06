@@ -80,7 +80,7 @@ build:docker:htrace.sh:
     - VERSION=$(curl -sL https://api.github.com/repos/trimstray/htrace.sh/git/matching-refs/tags | jq '.[].ref' | cut -c13- | rev | cut -c2- | rev | sed -n '/^[[:digit:]]\.[[:digit:]]\.[[:digit:]]$/p' | sort -r --version-sort | head -1)
     - git clone https://github.com/trimstray/htrace.sh.git
     - cd htrace.sh
-    - echo Overwrite VERSION from tag, due to build error (https://github.com/trimstray/htrace.sh/pull/101) and lack of new version
+    - echo 'Overwrite VERSION from tag, due to build error (https://github.com/trimstray/htrace.sh/pull/101) and lack of the new version'
     - VERSION=$(git describe  | cut -c2-)
     - docker build --no-cache -t $NAME -f build/Dockerfile .
     - cd ..
