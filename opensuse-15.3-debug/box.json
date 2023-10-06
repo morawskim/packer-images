@@ -1,52 +1,57 @@
 {
-  "variables": {
-    "docker_registry": "https://index.docker.io",
-    "docker_username": "morawskim",
-    "docker_password": "{{ env `DOCKER_TOKEN` }}"
-  },
-  "sensitive-variables": [
-    "docker_password"
-  ],
   "builders": [
     {
-      "type": "docker",
+      "commit": true,
       "image": "opensuse/leap:15.3",
-      "commit": true
-    }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "script": "provision.sh"
+      "type": "docker"
     }
   ],
   "post-processors": [
     [
       {
-        "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-debug",
-        "tag": "15.3"
+        "tags": [
+          "15.3"
+        ],
+        "type": "docker-tag"
       },
       {
-        "type": "docker-push",
         "login": true,
+        "login_password": "{{user `docker_password`}}",
         "login_username": "{{user `docker_username`}}",
-        "login_password": "{{user `docker_password`}}"
+        "type": "docker-push"
       }
     ],
     [
       {
-        "type": "docker-tag",
         "repository": "morawskim/opensuse-leap-debug",
-        "tag": "15.3.{{ isotime \"2006-01-02\" }}"
+        "tags": [
+          "15.3.{{ isotime \"2006-01-02\" }}"
+        ],
+        "type": "docker-tag"
       },
       {
-        "type": "docker-push",
         "keep_input_artifact": false,
         "login": true,
+        "login_password": "{{user `docker_password`}}",
         "login_username": "{{user `docker_username`}}",
-        "login_password": "{{user `docker_password`}}"
+        "type": "docker-push"
       }
     ]
-  ]
+  ],
+  "provisioners": [
+    {
+      "script": "provision.sh",
+      "type": "shell"
+    }
+  ],
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "variables": {
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_registry": "https://index.docker.io",
+    "docker_username": "morawskim"
+  }
 }
+

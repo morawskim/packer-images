@@ -1,30 +1,33 @@
 {
-  "variables": {
-    "region": null,
-    "region_data_url": null,
-    "box_version": "0.1.0",
-    "osm_file_path": "/tmp/latest.osm.pbf",
-    "skip_add": "false",
-    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
-  },
-  "sensitive-variables": [
-    "vagrant_cloud_token"
-  ],
   "builders": [
     {
-      "type": "vagrant",
+      "add_force": true,
       "communicator": "ssh",
       "provider": "virtualbox",
-      "source_path": "morawskim/Ubuntu-18.04-amd64-minimal",
       "skip_add": "{{user `skip_add`}}",
-      "add_force": true,
+      "source_path": "morawskim/Ubuntu-18.04-amd64-minimal",
+      "synced_folder": "../",
       "template": "Vagrantfile-template",
-      "synced_folder": "../"
+      "type": "vagrant"
     }
+  ],
+  "post-processors": [
+    [
+      {
+        "access_token": "{{user `vagrant_cloud_token`}}",
+        "box_tag": "morawskim/nominatim-{{user `region`}}",
+        "no_release": true,
+        "type": "vagrant-cloud",
+        "version": "{{user `box_version`}}.{{ isotime \"2006-01-02\" }}"
+      }
+    ]
   ],
   "provisioners": [
     {
-      "type": "shell",
+      "environment_vars": [
+        "DEBIAN_FRONTEND=noninteractive"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
       "inline": [
         "sleep 30",
         "apt-get update -qq",
@@ -33,49 +36,47 @@
         "apt-get clean",
         "rm -rf /var/lib/{apt,dpkg,cache,log}/"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
-      "environment_vars": [
-        "DEBIAN_FRONTEND=noninteractive"
-      ]
+      "type": "shell"
     },
     {
-      "type": "shell",
       "inline": [
         "wget -O{{user `osm_file_path`}} --no-verbose {{user `region_data_url`}}"
-      ]
+      ],
+      "type": "shell"
     },
     {
-      "type": "shell",
+      "environment_vars": [
+        "OSM_FILE_PATH={{user `osm_file_path`}}"
+      ],
       "scripts": [
         "provision/script.sh"
       ],
-      "environment_vars": [
-        "OSM_FILE_PATH={{user `osm_file_path`}}"
-      ]
+      "type": "shell"
     },
     {
-      "type": "shell",
       "inline": [
         "rm -v {{user `osm_file_path`}}"
-      ]
+      ],
+      "type": "shell"
     },
     {
-      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash -ex '{{.Path}}'",
       "scripts": [
         "provision/cleanup.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash -ex '{{.Path}}'"
+      "type": "shell"
     }
   ],
-  "post-processors": [
-    [
-      {
-        "type": "vagrant-cloud",
-        "no_release": true,
-        "box_tag": "morawskim/nominatim-{{user `region`}}",
-        "access_token": "{{user `vagrant_cloud_token`}}",
-        "version": "{{user `box_version`}}.{{ isotime \"2006-01-02\" }}"
-      }
-    ]
-  ]
+  "sensitive-variables": [
+    "vagrant_cloud_token"
+  ],
+  "variables": {
+    "box_version": "0.1.0",
+    "osm_file_path": "/tmp/latest.osm.pbf",
+    "region": null,
+    "region_data_url": null,
+    "skip_add": "false",
+    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
+  }
 }
+

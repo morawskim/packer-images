@@ -1,58 +1,65 @@
 {
-  "variables": {
-    "docker_username": "morawskim",
-    "docker_password": "{{ env `DOCKER_TOKEN` }}",
-    "docker_tag": null
-  },
-  "sensitive-variables": [
-    "docker_password"
-  ],
   "builders": [
     {
-      "type": "docker",
-      "image": "python:3.7-slim-buster",
-      "commit": true,
       "changes": [
         "ENV DEBIAN_FRONTEND noninteractive",
         "ENTRYPOINT [\"/usr/local/bin/csvsql\"]",
         "USER nobody"
-      ]
-    }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "script": "provision.sh",
-      "environment_vars": ["VERSION={{ user `docker_tag` }}"]
+      ],
+      "commit": true,
+      "image": "python:3.7-slim-buster",
+      "type": "docker"
     }
   ],
   "post-processors": [
     [
       {
-        "type": "docker-tag",
         "repository": "morawskim/csvsql-mysql",
-        "tag": "latest"
+        "tags": [
+          "latest"
+        ],
+        "type": "docker-tag"
       },
       {
-        "type": "docker-push",
         "login": true,
+        "login_password": "{{user `docker_password`}}",
         "login_username": "{{user `docker_username`}}",
-        "login_password": "{{user `docker_password`}}"
+        "type": "docker-push"
       }
     ],
     [
       {
-        "type": "docker-tag",
         "repository": "morawskim/csvsql-mysql",
-        "tag": "{{ user `docker_tag` }}"
+        "tags": [
+          "{{ user `docker_tag` }}"
+        ],
+        "type": "docker-tag"
       },
       {
-        "type": "docker-push",
         "keep_input_artifact": false,
         "login": true,
+        "login_password": "{{user `docker_password`}}",
         "login_username": "{{user `docker_username`}}",
-        "login_password": "{{user `docker_password`}}"
+        "type": "docker-push"
       }
     ]
-  ]
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "VERSION={{ user `docker_tag` }}"
+      ],
+      "script": "provision.sh",
+      "type": "shell"
+    }
+  ],
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "variables": {
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null,
+    "docker_username": "morawskim"
+  }
 }
+

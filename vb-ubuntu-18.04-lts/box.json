@@ -1,58 +1,6 @@
 {
-  "variables": {
-    "iso_name": "ubuntu-18.04.2-server-amd64.iso",
-    "iso_path": "bionic",
-    "iso_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
-    "iso_checksum_type": "sha256",
-    "ssh_name": "vagrant",
-    "ssh_pass": "vagrant",
-    "hostname": "ubuntu-vagrant",
-    "vm_name": "Ubuntu-18.04-amd64-minimal",
-    "box_version": "0.1.0",
-    "preseed": "ubuntu-server.seed",
-    "virtualbox_version": "6.0.12",
-    "num_cpus": "1",
-    "mem_size": "512",
-    "disk_size": "40960",
-    "linux": "/install/linux",
-    "initrd": "/install/initrd.gz",
-    "headless": "false",
-    "archive_mirror": "http://archive.ubuntu.com/ubuntu",
-    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}"
-  },
-  "sensitive-variables": [
-    "vagrant_cloud_token"
-  ],
   "builders": [
     {
-      "type": "virtualbox-iso",
-      "boot_wait": "10s",
-      "disk_size": "{{user `disk_size`}}",
-      "memory": "{{ user `mem_size` }}",
-      "cpus": "{{ user `num_cpus` }}",
-      "guest_os_type": "Ubuntu_64",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-      "iso_urls": [
-        "./iso/{{user `iso_name`}}",
-        "http://old-releases.ubuntu.com/releases/{{user `iso_path`}}/{{user `iso_name`}}"
-      ],
-      "ssh_username": "{{user `ssh_name`}}",
-      "ssh_password": "{{user `ssh_pass`}}",
-      "ssh_port": 22,
-      "ssh_wait_timeout": "10000s",
-      "shutdown_command": "sudo /sbin/shutdown -h now",
-      "output_directory": "output/{{user `vm_name`}}-v{{user `box_version`}}-virtualbox",
-      "guest_additions_mode": "disable",
-      "virtualbox_version_file": ".vbox_version",
-      "vm_name": "{{user `vm_name`}}",
-      "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "{{user `mem_size`}}" ],
-        [ "modifyvm", "{{.Name}}", "--cpus", "{{user `num_cpus`}}" ],
-        [ "modifyvm", "{{.Name}}", "--rtcuseutc", "on" ]
-      ],
-      "http_directory": "./http",
-      "headless": "{{user `headless`}}",
       "boot_command": [
         "<esc><wait>",
         "<esc><wait>",
@@ -69,29 +17,51 @@
         " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed`}}<wait>",
         " -- <wait>",
         "<enter><wait>"
-      ]
-    },
-    {
-      "type": "qemu",
+      ],
       "boot_wait": "10s",
-      "disk_size": "{{user `disk_size`}}",
-      "memory": "{{ user `mem_size` }}",
       "cpus": "{{ user `num_cpus` }}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_additions_mode": "disable",
+      "guest_os_type": "Ubuntu_64",
+      "headless": "{{user `headless`}}",
+      "http_directory": "./http",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_urls": [
         "./iso/{{user `iso_name`}}",
         "http://old-releases.ubuntu.com/releases/{{user `iso_path`}}/{{user `iso_name`}}"
       ],
-      "ssh_username": "{{user `ssh_name`}}",
+      "memory": "{{ user `mem_size` }}",
+      "output_directory": "output/{{user `vm_name`}}-v{{user `box_version`}}-virtualbox",
+      "shutdown_command": "sudo /sbin/shutdown -h now",
       "ssh_password": "{{user `ssh_pass`}}",
       "ssh_port": 22,
-      "ssh_wait_timeout": "10000s",
-      "shutdown_command": "sudo /sbin/shutdown -h now",
-      "output_directory": "output/{{user `vm_name`}}-v{{user `box_version`}}-qemu",
-      "vm_name": "{{user `vm_name`}}",
-      "http_directory": "./http",
-      "headless": "{{user `headless`}}",
+      "ssh_timeout": "10000s",
+      "ssh_username": "{{user `ssh_name`}}",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `mem_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `num_cpus`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--rtcuseutc",
+          "on"
+        ]
+      ],
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "{{user `vm_name`}}"
+    },
+    {
       "boot_command": [
         "<esc><wait>",
         "<esc><wait>",
@@ -108,57 +78,101 @@
         " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed`}}<wait>",
         " -- <wait>",
         "<enter><wait>"
-      ]
-    }
-  ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "scripts": [
-        "./provisioners/base.sh",
-        "./provisioners/vagrant.sh"
       ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
-      "environment_vars": [
-        "VAGRANT_USERNAME={{user `vagrant_username`}}",
-        "VIRTUALBOX_VERSION={{user `virtualbox_version`}}",
-        "ARCHIVE_MIRROR={{user `archive_mirror`}}"
-      ]
-    },
-    {
-      "type": "shell",
-      "only": [
-        "virtualbox-iso"
+      "boot_wait": "10s",
+      "cpus": "{{ user `num_cpus` }}",
+      "disk_size": "{{user `disk_size`}}",
+      "headless": "{{user `headless`}}",
+      "http_directory": "./http",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
+      "iso_urls": [
+        "./iso/{{user `iso_name`}}",
+        "http://old-releases.ubuntu.com/releases/{{user `iso_path`}}/{{user `iso_name`}}"
       ],
-      "script": "./provisioners/virtualbox.sh",
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
-      "environment_vars": [
-        "VAGRANT_USERNAME={{user `vagrant_username`}}",
-        "VIRTUALBOX_VERSION={{user `virtualbox_version`}}"
-      ]
-    },
-    {
-      "type": "shell",
-      "scripts": [
-        "./provisioners/cleanup.sh"
-      ],
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'"
+      "memory": "{{ user `mem_size` }}",
+      "output_directory": "output/{{user `vm_name`}}-v{{user `box_version`}}-qemu",
+      "shutdown_command": "sudo /sbin/shutdown -h now",
+      "ssh_password": "{{user `ssh_pass`}}",
+      "ssh_port": 22,
+      "ssh_timeout": "10000s",
+      "ssh_username": "{{user `ssh_name`}}",
+      "type": "qemu",
+      "vm_name": "{{user `vm_name`}}"
     }
   ],
   "post-processors": [
     [
       {
-        "type": "vagrant",
         "compression_level": 6,
-        "output": "./{{user `vm_name`}}-v{{user `box_version`}}-{{ .Provider }}.box"
+        "output": "./{{user `vm_name`}}-v{{user `box_version`}}-{{ .Provider }}.box",
+        "type": "vagrant"
       },
       {
-        "type": "vagrant-cloud",
-        "no_release": true,
-        "box_tag": "morawskim/{{user `vm_name`}}",
         "access_token": "{{user `vagrant_cloud_token`}}",
+        "box_tag": "morawskim/{{user `vm_name`}}",
+        "no_release": true,
+        "type": "vagrant-cloud",
         "version": "{{user `box_version`}}.{{ isotime \"2006-01-02\" }}"
       }
     ]
-  ]
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "VAGRANT_USERNAME={{user `vagrant_username`}}",
+        "VIRTUALBOX_VERSION={{user `virtualbox_version`}}",
+        "ARCHIVE_MIRROR={{user `archive_mirror`}}"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
+      "scripts": [
+        "./provisioners/base.sh",
+        "./provisioners/vagrant.sh"
+      ],
+      "type": "shell"
+    },
+    {
+      "environment_vars": [
+        "VAGRANT_USERNAME={{user `vagrant_username`}}",
+        "VIRTUALBOX_VERSION={{user `virtualbox_version`}}"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
+      "only": [
+        "virtualbox-iso"
+      ],
+      "script": "./provisioners/virtualbox.sh",
+      "type": "shell"
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S sh -ex '{{.Path}}'",
+      "scripts": [
+        "./provisioners/cleanup.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "sensitive-variables": [
+    "vagrant_cloud_token"
+  ],
+  "variables": {
+    "archive_mirror": "http://archive.ubuntu.com/ubuntu",
+    "box_version": "0.1.0",
+    "disk_size": "40960",
+    "headless": "false",
+    "hostname": "ubuntu-vagrant",
+    "initrd": "/install/initrd.gz",
+    "iso_checksum": "a2cb36dc010d98ad9253ea5ad5a07fd6b409e3412c48f1860536970b073c98f5",
+    "iso_checksum_type": "sha256",
+    "iso_name": "ubuntu-18.04.2-server-amd64.iso",
+    "iso_path": "bionic",
+    "linux": "/install/linux",
+    "mem_size": "512",
+    "num_cpus": "1",
+    "preseed": "ubuntu-server.seed",
+    "ssh_name": "vagrant",
+    "ssh_pass": "vagrant",
+    "vagrant_cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}",
+    "virtualbox_version": "6.0.12",
+    "vm_name": "Ubuntu-18.04-amd64-minimal"
+  }
 }
+
