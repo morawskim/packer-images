@@ -214,6 +214,22 @@ build:docker:lorem-space-backend:
   except:
     - triggers
 
+build:docker:restic:
+  stage: build
+  script:
+    - pushd restic-aws-backup
+    - make build
+    - TAG=$(date '+%Y%m%d')
+    - echo 'TAG - ' $TAG
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build --var docker_tag=$TAG box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "restic-aws-backup/*"
+  except:
+    - triggers
+
 clean:
   stage: clean
   when: always

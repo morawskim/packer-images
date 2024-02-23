@@ -1,0 +1,44 @@
+{
+  "builders": [
+    {
+      "commit": true,
+      "image": "morawskim/restic-aws-backup",
+      "pull": false,
+      "run_command": [
+        "-d",
+        "-i",
+        "-t",
+        "--",
+        "{{.Image}}"
+      ],
+      "type": "docker"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "repository": "morawskim/restic-aws-backup",
+        "tags": [
+          "{{ user `docker_tag` }}"
+        ],
+        "type": "docker-tag"
+      },
+      {
+        "keep_input_artifact": false,
+        "login": true,
+        "login_password": "{{user `docker_password`}}",
+        "login_username": "{{user `docker_username`}}",
+        "type": "docker-push"
+      }
+    ]
+  ],
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "variables": {
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null,
+    "docker_username": "morawskim"
+  }
+}
+
