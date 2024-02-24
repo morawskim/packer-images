@@ -7,7 +7,7 @@
         "USER nobody"
       ],
       "commit": true,
-      "image": "debian:stretch-slim",
+      "image": "debian:stable-slim",
       "type": "docker"
     }
   ],
