@@ -1,6 +1,8 @@
 ## Build
 
-`DOCKER_TOKEN=<docker_password_or_token> packer build --var docker_tag=20190914.0 box.json`
+To get latest tag, visit [swaks release page on GitHub](https://github.com/jetmore/swaks/releases)
+
+`DOCKER_TOKEN=<docker_password_or_token> packer build --var docker_tag=20240103.0 box.json`
 
 ## Run
 
