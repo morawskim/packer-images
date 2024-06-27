@@ -73,7 +73,7 @@ build:docker:node20-google-chrome:
   except:
     - triggers
 
-build:docker:htrace.sh:
+.build:docker:htrace.sh:
   stage: build
   script:
     - cd htrace.sh
