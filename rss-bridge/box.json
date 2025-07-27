@@ -1,9 +1,6 @@
 {
   "builders": [
     {
-      "changes": [
-        "EXPOSE 80"
-      ],
       "commit": true,
       "image": "dunglas/frankenphp:1.9-php8.4",
       "pull": true,
