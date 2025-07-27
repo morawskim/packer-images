@@ -1,0 +1,18 @@
+{
+	frankenphp {
+		php_ini {
+			error_reporting "E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED"
+			curl.cainfo "/etc/ssl/certs/ca-certificates.crt"
+			openssl.cafile "/etc/ssl/certs/ca-certificates.crt"
+			memory_limit 256M
+		}
+	}
+}
+http://localhost:80 {
+	# enable comppression (optional)
+	encode zstd br gzip
+	# execute PHP files in the current directory and server assets
+	php_server {
+		root /app
+	}
+}

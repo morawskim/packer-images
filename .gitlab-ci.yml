@@ -228,6 +228,21 @@ build:docker:restic:
   except:
     - triggers
 
+build:docker:rss-bridge:
+  stage: build
+  script:
+    - pushd rss-bridge
+    - packer version
+    - git clone https://github.com/RSS-Bridge/rss-bridge.git
+    - DOCKER_TOKEN=$DOCKER_HUB_TOKEN packer build box.json
+  tags:
+    - packer
+  only:
+    changes:
+      - "rss-bridge/*"
+  except:
+    - triggers
+
 clean:
   stage: clean
   when: always

@@ -1,0 +1,50 @@
+{
+  "builders": [
+    {
+      "changes": [
+        "EXPOSE 80"
+      ],
+      "commit": true,
+      "image": "dunglas/frankenphp:1.9-php8.4",
+      "pull": true,
+      "type": "docker"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "repository": "morawskim/rss-bridge",
+        "tags": [
+          "latest"
+        ],
+        "type": "docker-tag"
+      },
+      {
+        "login": true,
+        "login_password": "{{user `docker_password`}}",
+        "login_username": "{{user `docker_username`}}",
+        "type": "docker-push"
+      }
+    ]
+  ],
+  "provisioners": [
+    {
+      "destination": "/etc/frankenphp/Caddyfile",
+      "source": "Caddyfile",
+      "type": "file"
+    },
+    {
+      "destination": "/app",
+      "source": "rss-bridge/",
+      "type": "file"
+    }
+  ],
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "variables": {
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_username": "morawskim"
+  }
+}
+
