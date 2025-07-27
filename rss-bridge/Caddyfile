@@ -8,7 +8,7 @@
 		}
 	}
 }
-http://localhost:80 {
+http://:80 {
 	# enable comppression (optional)
 	encode zstd br gzip
 	# execute PHP files in the current directory and server assets
