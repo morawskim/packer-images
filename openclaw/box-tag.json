@@ -1,0 +1,50 @@
+{
+  "builders": [
+    {
+      "changes": [
+        "ENV NODE_ENV production",
+        "EXPOSE 18789",
+        "USER node",
+        "CMD [\"openclaw\", \"gateway\", \"run\", \"--allow-unconfigured\"]"
+      ],
+      "commit": true,
+      "image": "node:25",
+      "type": "docker"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "repository": "morawskim/openclaw",
+        "tags": [
+          "{{ user `docker_tag` }}"
+        ],
+        "type": "docker-tag"
+      },
+      {
+        "login": true,
+        "login_password": "{{user `docker_password`}}",
+        "login_username": "{{user `docker_username`}}",
+        "type": "docker-push"
+      }
+    ]
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+        "VERSION={{ user `docker_tag` }}"
+      ],
+      "script": "provision.sh",
+      "type": "shell"
+    }
+  ],
+  "sensitive-variables": [
+    "docker_password"
+  ],
+  "variables": {
+    "docker_password": "{{ env `DOCKER_TOKEN` }}",
+    "docker_tag": null,
+    "docker_username": "morawskim"
+  }
+}
+
